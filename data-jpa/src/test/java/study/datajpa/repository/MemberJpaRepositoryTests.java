@@ -29,7 +29,6 @@ public class MemberJpaRepositoryTests {
         System.out.println(Assertions.assertThat(findMember).isEqualTo(member));
     }
 
-    @Test
     public void basicCRUD() {
         Member member1 = new Member("member1");
         Member member2 = new Member("member2");
@@ -43,6 +42,17 @@ public class MemberJpaRepositoryTests {
         assertThat(findMember1).isEqualTo(member1);
         assertThat(findMember2).isEqualTo(member2);
 
+    }
+
+    @Test
+    public void namedQuery() {
+        Member member1 = new Member("member1");
+        Member member2 = new Member("member2");
+
+        memberJpaRepository.save(member1);
+        memberJpaRepository.save(member2);
+
+        System.out.println(memberJpaRepository.findByUserName("member1"));
     }
 
 }

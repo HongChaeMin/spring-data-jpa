@@ -8,15 +8,17 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest
 @Rollback(false)
+@Transactional
 public class MemberRepositoryTests {
 
     @Autowired
     private MemberRepository memberRepository;
 
-    @Test
-    @Transactional
     public void findTest() {
         Member member = new Member("tester1");
         Member savedMember = memberRepository.save(member);
@@ -26,6 +28,60 @@ public class MemberRepositoryTests {
         System.out.println(Assertions.assertThat(findMember.getId()).isEqualTo(member.getId()));
         System.out.println(Assertions.assertThat(findMember.getUserName()).isEqualTo(member.getUserName()));
         System.out.println(Assertions.assertThat(findMember).isEqualTo(member));
+    }
+
+    public void findByUserNameAndAgeGreaterThan() {
+        Member member1 = new Member("tester1", 10);
+        Member member2 = new Member("tester2", 20);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        System.out.println(memberRepository.findByUserNameAndAgeGreaterThan("tester1", 10));
+
+    }
+
+    public void finByAgeOrderByAgeDese() {
+        Member member1 = new Member("tester1", 10);
+        Member member2 = new Member("tester1", 20);
+
+        System.out.println(memberRepository.findByUserNameOrderByAgeDesc("tester1"));
+    }
+
+    public void testQuery() {
+        Member member1 = new Member("tester1", 10);
+        Member member2 = new Member("tester2", 20);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        System.out.println(memberRepository.findUser("tester1", 10));
+    }
+
+    public void testFindUserNameList() {
+        System.out.println(memberRepository.findUserNameList());
+    }
+
+    public void testFinMemberDto() {
+        System.out.println(memberRepository.findMemberDto());
+    }
+
+    public void testFindMembers() {
+        List<String> names = new ArrayList<>();
+        names.add("tester1");
+        names.add("tester2");
+
+        System.out.println(memberRepository.findMembers(names));
+    }
+
+    @Test
+    public void testReturnType() {
+        // collection 으로 받을 때 데이터가 없으면 null이 아니라 empty collection으로 반환 시켜줌
+        // 단건 조회로 받을 때 데이터가 없으면 null 반환
+        // optional 쓰는게 좋음...!
+
+        System.out.println(memberRepository.findListByUsername("tester1"));
+        System.out.println(memberRepository.findMemberByUsername("tester1"));
+        System.out.println(memberRepository.findOptionalByUsername("tester1"));
     }
 
 }

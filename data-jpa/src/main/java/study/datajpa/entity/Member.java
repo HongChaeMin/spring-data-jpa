@@ -8,6 +8,10 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "userName", "age"})
+@NamedQuery(
+        name="Member.findByUserName",
+        query = "select m from Member m where m.userName = :username"
+)
 public class Member {
 
     @Id @GeneratedValue // 순차적인 값
@@ -32,6 +36,11 @@ public class Member {
         if (team != null) {
             changeTeam(team);
         }
+    }
+
+    public Member(String userName, int age) {
+        this.userName = userName;
+        this.age = age;
     }
 
     public void changeTeam(Team team) {
