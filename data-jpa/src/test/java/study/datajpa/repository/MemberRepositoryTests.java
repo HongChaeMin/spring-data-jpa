@@ -37,7 +37,6 @@ public class MemberRepositoryTests {
 
     }
 
-    @Test
     public void finByAgeOrderByAgeDese() {
         Member member1 = new Member("tester1", 10);
         Member member2 = new Member("tester1", 20);
