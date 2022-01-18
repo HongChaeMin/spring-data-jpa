@@ -18,7 +18,6 @@ public class MemberTests {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Test
     @Transactional
     public void test() {
         Team teamA = new Team("TeamA");
