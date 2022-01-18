@@ -8,6 +8,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
+import java.util.List;
+
 @SpringBootTest
 @Rollback(false)
 @Transactional
@@ -42,6 +44,17 @@ public class MemberRepositoryTests {
         Member member2 = new Member("tester1", 20);
 
         System.out.println(memberRepository.findByUserNameOrderByAgeDesc("tester1"));
+    }
+
+    @Test
+    public void testQuery() {
+        Member member1 = new Member("tester1", 10);
+        Member member2 = new Member("tester2", 20);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        System.out.println(memberRepository.findUser("tester1", 10));
     }
 
 }
