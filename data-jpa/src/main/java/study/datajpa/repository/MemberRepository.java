@@ -7,6 +7,7 @@ import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
@@ -31,5 +32,16 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // DTO로 변환 가능 new DTO()
     @Query("select new study.datajpa.dto.MemberDTO(m.id, m.userName, t.name) from Member m join m.team t")
     List<MemberDTO> findMemberDto();
+
+    // 파라미터 바인딩
+    // - 위치 기반(안씀), - 이름 기반
+    @Query("select m from Member m where m.userName in :names")
+    List<Member> findMembers(@Param("names") List<String> names);
+
+    // spring data jpa는 유연한 반환타입 지원
+    // 레퍼런스에 리턴 타입 정의되어 있음
+    List<Member> findListByUsername(String name); // 컬렉션
+    Member findMemberByUsername(String name); // 단건
+    Optional<Member> findOptionalByUsername(String name); //단건 Optional
 
 }

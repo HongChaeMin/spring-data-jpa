@@ -8,6 +8,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -60,9 +61,27 @@ public class MemberRepositoryTests {
         System.out.println(memberRepository.findUserNameList());
     }
 
-    @Test
     public void testFinMemberDto() {
         System.out.println(memberRepository.findMemberDto());
+    }
+
+    public void testFindMembers() {
+        List<String> names = new ArrayList<>();
+        names.add("tester1");
+        names.add("tester2");
+
+        System.out.println(memberRepository.findMembers(names));
+    }
+
+    @Test
+    public void testReturnType() {
+        // collection 으로 받을 때 데이터가 없으면 null이 아니라 empty collection으로 반환 시켜줌
+        // 단건 조회로 받을 때 데이터가 없으면 null 반환
+        // optional 쓰는게 좋음...!
+
+        System.out.println(memberRepository.findListByUsername("tester1"));
+        System.out.println(memberRepository.findMemberByUsername("tester1"));
+        System.out.println(memberRepository.findOptionalByUsername("tester1"));
     }
 
 }
