@@ -46,7 +46,6 @@ public class MemberRepositoryTests {
         System.out.println(memberRepository.findByUserNameOrderByAgeDesc("tester1"));
     }
 
-    @Test
     public void testQuery() {
         Member member1 = new Member("tester1", 10);
         Member member2 = new Member("tester2", 20);
@@ -55,6 +54,15 @@ public class MemberRepositoryTests {
         memberRepository.save(member2);
 
         System.out.println(memberRepository.findUser("tester1", 10));
+    }
+
+    public void testFindUserNameList() {
+        System.out.println(memberRepository.findUserNameList());
+    }
+
+    @Test
+    public void testFinMemberDto() {
+        System.out.println(memberRepository.findMemberDto());
     }
 
 }
