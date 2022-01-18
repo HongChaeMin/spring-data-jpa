@@ -8,8 +8,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
-import java.util.Optional;
-
 @SpringBootTest
 @Rollback(false)
 public class MemberRepositoryTests {
