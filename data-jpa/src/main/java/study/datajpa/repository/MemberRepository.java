@@ -40,8 +40,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // spring data jpa는 유연한 반환타입 지원
     // 레퍼런스에 리턴 타입 정의되어 있음
-    List<Member> findListByUsername(String name); // 컬렉션
-    Member findMemberByUsername(String name); // 단건
-    Optional<Member> findOptionalByUsername(String name); //단건 Optional
+    List<Member> findListByUserName(String userName); // 컬렉션
+    Member findMemberByUserName(String userName); // 단건
+    Optional<Member> findOptionalByUserName(String userName); //단건 Optional
+
+    // 얘는 파라미터 값 이름이랑 엔티티 이름이랑 같아야하나봄
 
 }
