@@ -79,9 +79,9 @@ public class MemberRepositoryTests {
         // 단건 조회로 받을 때 데이터가 없으면 null 반환
         // optional 쓰는게 좋음...!
 
-        System.out.println(memberRepository.findListByUsername("tester1"));
-        System.out.println(memberRepository.findMemberByUsername("tester1"));
-        System.out.println(memberRepository.findOptionalByUsername("tester1"));
+        System.out.println(memberRepository.findListByUserName("tester1"));
+        System.out.println(memberRepository.findMemberByUserName("tester1"));
+        System.out.println(memberRepository.findOptionalByUserName("tester1"));
     }
 
 }

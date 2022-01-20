@@ -8,11 +8,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @Rollback(false)
-@Transactional
 public class MemberJpaRepositoryTests {
 
     @Autowired
@@ -44,7 +45,6 @@ public class MemberJpaRepositoryTests {
 
     }
 
-    @Test
     public void namedQuery() {
         Member member1 = new Member("member1");
         Member member2 = new Member("member2");
@@ -53,6 +53,19 @@ public class MemberJpaRepositoryTests {
         memberJpaRepository.save(member2);
 
         System.out.println(memberJpaRepository.findByUserName("member1"));
+    }
+
+    @Test
+    @Transactional
+    public void paging() {
+        List<Member> result = memberJpaRepository.findByPage(10, 0, 3);
+        Long totalCount = memberJpaRepository.totalCont(10);
+
+        for (Member m : result) {
+            System.out.println(m);
+        }
+        System.out.println("totalCount : " + totalCount);
+
     }
 
 }
