@@ -10,16 +10,20 @@ import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
 @Rollback(false)
-@Transactional
 public class MemberRepositoryTests {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     public void findTest() {
         Member member = new Member("tester1");
@@ -86,7 +90,6 @@ public class MemberRepositoryTests {
         System.out.println(memberRepository.findOptionalByUserName("tester1"));
     }
 
-    @Test
     @Transactional
     public void paging() {
 
@@ -126,6 +129,28 @@ public class MemberRepositoryTests {
             return new MemberDTO(member.getId(), member.getUserName(), member.getTeam().getName());
         });
 
+    }
+
+    @Test
+    @Transactional
+    public void bulkUpdate() {
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        // 기본적으로 save를 하면 data jpa가 db에 반영을 하고 다음동작을 실행함
+
+        // Member member = memberRepository.findMemberByUserName("tester1");
+
+        // 벌크 연산은 영속성 컨텍스트를 무시하고 실행하기 때문에, 영속성 컨텍스트에 있는 엔티티의 상태와
+        // DB에 엔티티 상태가 달라질 수 있다.
+
+        // System.out.println("member의 결과가 반영이 안되어 있다 : " + member);
+
+        // 지금은 @Modifying에 속성을 넣어줘야 바뀌는듯 이렇게 해도 안됨
+        // em.clear();
+
+        Member member2 = memberRepository.findMemberByUserName("tester1");
+
+        System.out.println("member의 결과가 반영이 되었다 : " + member2);
     }
 
 

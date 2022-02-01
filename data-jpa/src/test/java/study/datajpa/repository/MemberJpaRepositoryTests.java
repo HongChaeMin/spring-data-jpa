@@ -55,7 +55,6 @@ public class MemberJpaRepositoryTests {
         System.out.println(memberJpaRepository.findByUserName("member1"));
     }
 
-    @Test
     @Transactional
     public void paging() {
         List<Member> result = memberJpaRepository.findByPage(10, 0, 3);
@@ -66,6 +65,13 @@ public class MemberJpaRepositoryTests {
         }
         System.out.println("totalCount : " + totalCount);
 
+    }
+
+    @Test
+    public void bulkUpdate() {
+        int resultCount = memberJpaRepository.bulkAgePlus(20);
+
+        System.out.println(resultCount);
     }
 
 }
