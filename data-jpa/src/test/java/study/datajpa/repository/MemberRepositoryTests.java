@@ -25,6 +25,8 @@ public class MemberRepositoryTests {
 
     @PersistenceContext
     EntityManager em;
+    // em.flush() 실제 디비로 쿼리 날림 (영속성 컨텍스트 남아있음)
+    // em.clear() 영속성 컨텍스트 캐쉬 삭제
 
     public void findTest() {
         Member member = new Member("tester1");
@@ -153,7 +155,6 @@ public class MemberRepositoryTests {
         System.out.println("member의 결과가 반영이 되었다 : " + member2);
     }
 
-    @Test
     @Transactional
     public void findMemberLazy() {
         // tester1 -> TeamA
@@ -185,6 +186,26 @@ public class MemberRepositoryTests {
             System.out.println("member.team : " + m.getTeam().getName());
         }
 
+    }
+
+    @Transactional
+    public void queryHint() {
+        // Member findMember = memberRepository.findById(4L).get();
+
+        // 변경 감지(더티체킹)해서 디비에 쿼리를 날려버림
+        // findMember.setUserName("member2");
+        // 변경 감지를 위해서는 어쨋든 비교 대상이 있어야하기 때문에 2개의 데이터를 가지고 있어서 성능이 감소됨
+
+        Member findMember2 = memberRepository.findReadOnlyByUserName("member2");
+
+        // update query 실행 x
+        findMember2.setUserName("tester2");
+    }
+
+    @Test
+    @Transactional
+    public void lock() {
+        Member findMember = memberRepository.findLockByUserName("tester1");
     }
 
 }
