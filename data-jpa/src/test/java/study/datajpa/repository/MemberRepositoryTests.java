@@ -9,6 +9,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -131,7 +132,6 @@ public class MemberRepositoryTests {
 
     }
 
-    @Test
     @Transactional
     public void bulkUpdate() {
         int resultCount = memberRepository.bulkAgePlus(20);
@@ -153,5 +153,38 @@ public class MemberRepositoryTests {
         System.out.println("member의 결과가 반영이 되었다 : " + member2);
     }
 
+    @Test
+    @Transactional
+    public void findMemberLazy() {
+        // tester1 -> TeamA
+        // tester2 -> TeamB
+
+        List<Member> result = memberRepository.findAll();
+
+        // select 쿼리를 한 번 날림
+        for (Member m : result) {
+            System.out.println("member : " + m);
+        }
+
+        // N + 1
+        for (Member m : result) {
+            System.out.println("member : " + m);
+
+            // member만 가져와서 null로 보낼 수 없으니 가짜 엔티티를 만듦 (entity.Team$HibernateProxy$gCaEbUQv)
+            System.out.println("member.team.class : " + m.getTeam().getClass());
+
+            // 이때 team을 조회함
+            Hibernate:
+            /* select
+            team0_.team_id as team_id1_1_0_,
+                    team0_.name as name2_1_0_
+            from
+            team team0_
+            where
+            team0_.team_id=? */
+            System.out.println("member.team : " + m.getTeam().getName());
+        }
+
+    }
 
 }

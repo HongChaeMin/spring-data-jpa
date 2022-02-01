@@ -12,6 +12,7 @@ import javax.persistence.*;
         name="Member.findByUserName",
         query = "select m from Member m where m.userName = :username"
 )
+@NamedEntityGraph(name = "Member.all", attributeNodes = @NamedAttributeNode("team"))
 public class Member {
 
     @Id @GeneratedValue // 순차적인 값
