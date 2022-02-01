@@ -4,8 +4,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.*;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
 
 import java.util.ArrayList;
@@ -83,5 +85,48 @@ public class MemberRepositoryTests {
         System.out.println(memberRepository.findMemberByUserName("tester1"));
         System.out.println(memberRepository.findOptionalByUserName("tester1"));
     }
+
+    @Test
+    @Transactional
+    public void paging() {
+
+        Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "userName"));
+
+        // Page
+        Page<Member> page = memberRepository.findByAge(10, pageable);
+
+        List<Member> members = page.getContent();
+
+        for (Member m : members) {
+            System.out.println(m);
+        }
+
+        // 추가 count 쿼리 결과를 포함하는 페이징
+        System.out.println("size : " + members.size());
+        System.out.println("total content count : " + page.getTotalElements());
+        System.out.println("page number : " + page.getNumber());
+        System.out.println("total page count : " + page.getTotalPages());
+        System.out.println("is first : " + page.isFirst());
+        System.out.println("is last : " + page.isLast());
+
+        // Slice
+        Slice<Member> memberSlice = memberRepository.findSliceByAge(10, pageable);
+
+        // 추가 count 쿼리 없이 다음 페이지만 확인 가능 (내부적으로 limit + 1조회)
+        System.out.println("size : " + members.size());
+        System.out.println("page number : " + memberSlice.getNumber());
+        System.out.println("is first : " + memberSlice.isFirst());
+        System.out.println("is last : " + memberSlice.isLast());
+
+        // List
+        // 추가 count 쿼리 없이 결과만 반환
+
+        // entity를 dto로 쉽게 변환하는 방법
+        page.map(member -> {
+            return new MemberDTO(member.getId(), member.getUserName(), member.getTeam().getName());
+        });
+
+    }
+
 
 }
