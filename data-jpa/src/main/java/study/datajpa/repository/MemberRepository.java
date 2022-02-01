@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDTO;
+import study.datajpa.dto.UserNameOnlyDTO;
 import study.datajpa.entity.Member;
 
 import javax.persistence.LockModeType;
@@ -89,5 +90,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     // select for update
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Member findLockByUserName(String username);
+
+    <T> List<T> findProjectionsByUserName(@Param("username") String username, Class<T> type);
 
 }

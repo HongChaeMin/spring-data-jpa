@@ -9,7 +9,6 @@ import study.datajpa.repository.MemberRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PrePersist;
 import java.util.List;
 
 @SpringBootTest

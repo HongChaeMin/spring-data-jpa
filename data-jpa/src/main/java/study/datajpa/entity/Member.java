@@ -2,10 +2,8 @@ package study.datajpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

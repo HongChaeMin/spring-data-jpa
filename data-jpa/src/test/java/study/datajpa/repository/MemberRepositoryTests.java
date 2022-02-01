@@ -8,8 +8,8 @@ import org.springframework.data.domain.*;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDTO;
+import study.datajpa.dto.UserNameOnlyDTO;
 import study.datajpa.entity.Member;
-import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -82,7 +82,6 @@ public class MemberRepositoryTests {
         System.out.println(memberRepository.findMembers(names));
     }
 
-    @Test
     public void testReturnType() {
         // collection 으로 받을 때 데이터가 없으면 null이 아니라 empty collection으로 반환 시켜줌
         // 단건 조회로 받을 때 데이터가 없으면 null 반환
@@ -207,7 +206,6 @@ public class MemberRepositoryTests {
         Member findMember = memberRepository.findLockByUserName("tester1");
     }
 
-    @Test
     public void custom() {
         /* Hibernate:
         select
@@ -218,6 +216,16 @@ public class MemberRepositoryTests {
         from
         member member0_ */
         memberRepository.findMemberCustom();
+    }
+
+    @Test
+    public void projections() {
+        List<NestedClosedProjections> result = memberRepository.findProjectionsByUserName("tester1", NestedClosedProjections.class);
+
+        for (NestedClosedProjections u : result) {
+            System.out.println("NestedClosedProjections.getUserName : " + u.getUserName());
+            System.out.println("NestedClosedProjections.getTeam : " + u.getTeam());
+        }
     }
 
 }
