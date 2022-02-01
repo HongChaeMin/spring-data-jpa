@@ -13,7 +13,7 @@ import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom{
 
     // 문제점 : 이름이 계속 길어진다
     List<Member> findByUserNameAndAgeGreaterThan(String username, int age);

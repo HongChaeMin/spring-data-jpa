@@ -202,10 +202,22 @@ public class MemberRepositoryTests {
         findMember2.setUserName("tester2");
     }
 
-    @Test
     @Transactional
     public void lock() {
         Member findMember = memberRepository.findLockByUserName("tester1");
+    }
+
+    @Test
+    public void custom() {
+        /* Hibernate:
+        select
+        member0_.member_id as member_i1_0_,
+                member0_.age as age2_0_,
+        member0_.team_id as team_id4_0_,
+                member0_.user_name as user_nam3_0_
+        from
+        member member0_ */
+        memberRepository.findMemberCustom();
     }
 
 }
