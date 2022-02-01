@@ -1,8 +1,10 @@
 package study.datajpa.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -14,11 +16,16 @@ import javax.persistence.*;
         query = "select m from Member m where m.userName = :username"
 )
 @NamedEntityGraph(name = "Member.all", attributeNodes = @NamedAttributeNode("team"))
-public class Member extends JpaBaseEntity{
+public class Member extends BaseEntity{
 
     @Id @GeneratedValue // 순차적인 값
     @Column(name = "member_id")
     private Long id;
+
+    // 따로 사용 가능
+    /* @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdDate; */
 
     private String userName;
 
