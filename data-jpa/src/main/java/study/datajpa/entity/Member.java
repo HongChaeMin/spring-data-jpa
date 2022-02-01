@@ -1,5 +1,6 @@
 package study.datajpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
         query = "select m from Member m where m.userName = :username"
 )
 @NamedEntityGraph(name = "Member.all", attributeNodes = @NamedAttributeNode("team"))
-public class Member extends BaseEntity{
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue // 순차적인 값
     @Column(name = "member_id")
@@ -32,6 +33,7 @@ public class Member extends BaseEntity{
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     @JoinColumn(name = "team_id")
     private Team team;
 

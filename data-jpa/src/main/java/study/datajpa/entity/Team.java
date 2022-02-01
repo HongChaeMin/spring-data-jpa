@@ -1,5 +1,6 @@
 package study.datajpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class Team {
     private String name;
 
     @OneToMany(mappedBy = "team")
+    @JsonBackReference
     private List<Member> members = new ArrayList<>();
 
     public Team(String name) {
