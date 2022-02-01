@@ -3,16 +3,17 @@ package study.datajpa.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom{
 
     // 문제점 : 이름이 계속 길어진다
     List<Member> findByUserNameAndAgeGreaterThan(String username, int age);
@@ -55,6 +56,38 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findListByAge(int age, Pageable pageable);
 
-    ㅊ
+    @Modifying(clearAutomatically = true) // 필수로 넣어주어야함
+    @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
+    int bulkAgePlus(@Param("age")int age);
+
+    // join fetch 를 하면 연관관계에 있는 db를 다 조회함
+    // 프록시 객체를 안만들고 team 객체를 다 가져와서 .getClass로 조회를 해보면 entity class가 채워져있음
+    @Query("select m from Member m left join fetch m.team")
+    List<Member> finMemberFetchJoin();
+
+    @Override
+    @EntityGraph(attributePaths = {"team"}) // 내부적으로 fetch 조인을 함
+    List<Member> findAll();
+
+    // @Query도 됨
+    @EntityGraph(attributePaths = {"team"})
+    @Query("select m from Member m")
+    List<Member> findMemberEntityGraph();
+
+    // named query도 됨
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findEntityGraphByUserName(@Param("userName") String username);
+
+    // @NamedEntityGraph도 됨
+    @EntityGraph("Member.all")
+    List<Member> findNamedEntityGraphByUserName(@Param("userName") String username);
+
+    // hibernate가 제공해줌
+    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value = "true"))
+    Member findReadOnlyByUserName(String username);
+
+    // select for update
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Member findLockByUserName(String username);
 
 }

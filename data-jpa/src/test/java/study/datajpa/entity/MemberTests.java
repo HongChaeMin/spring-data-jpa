@@ -9,6 +9,7 @@ import study.datajpa.repository.MemberRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PrePersist;
 import java.util.List;
 
 @SpringBootTest
@@ -17,6 +18,9 @@ public class MemberTests {
 
     @PersistenceContext
     EntityManager entityManager;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Transactional
     public void test() {
@@ -46,6 +50,26 @@ public class MemberTests {
             System.out.println("member = " + member);
             System.out.println("-> member.team = " + member.getTeam());
         }
+    }
+
+    @Test
+    @Transactional
+    public void JpaEventBaseEntity() throws InterruptedException {
+        Member member = new Member("member1");
+        memberRepository.save(member); // @PrePersist
+
+        Thread.sleep(100);
+        member.setUserName("member2");
+
+        entityManager.flush(); // @PreUpdate
+        entityManager.clear();
+
+        Member findMember = memberRepository.findById(member.getId()).get();
+
+
+        System.out.println("findMember.createdDate : " + findMember.getCreatedDate());
+        System.out.println("findMember.updatedDate : " + findMember.getLastModifiedDate());
+
     }
 
 }
