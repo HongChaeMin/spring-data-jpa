@@ -15,7 +15,7 @@ public class NoticeService {
 
     @Transactional // 필요
     public void saveNotice(Long Id, NoticeDTO noticeDTO) {
-        // method 1개라도 걸리면 전체 적용하나봄
+        // lock을 걸면 row나 entity에 락이 걸리기 때문에 지금은 엔티티가 같이 걸린거임
         noticeRepository.findAllByIdIn(Collections.singletonList(Id));
         noticeRepository.save(NoticeDTO.of(noticeDTO));
     }
