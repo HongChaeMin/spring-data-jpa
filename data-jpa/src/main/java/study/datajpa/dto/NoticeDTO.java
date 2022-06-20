@@ -13,11 +13,15 @@ import study.datajpa.entity.Notice;
 public class NoticeDTO {
 
     private Long noticeId;
+    private Long memberId;
+    private Long teamId;
     private String title;
     private String content;
 
     public static Notice of(NoticeDTO noticeDTO) {
         return Notice.builder()
+            .memberId(noticeDTO.getMemberId())
+            .teamId(noticeDTO.getTeamId())
             .title(noticeDTO.getTitle())
             .content(noticeDTO.getContent())
             .build();

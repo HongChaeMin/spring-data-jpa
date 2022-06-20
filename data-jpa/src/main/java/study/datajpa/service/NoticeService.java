@@ -1,21 +1,12 @@
 package study.datajpa.service;
 
-import java.io.IOException;
-import java.sql.SQLTransactionRollbackException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import javax.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.NoticeDTO;
-import study.datajpa.entity.Member;
 import study.datajpa.entity.Notice;
-import study.datajpa.repository.MemberRepository;
 import study.datajpa.repository.NoticeRepository;
 
 @Service
@@ -23,12 +14,12 @@ import study.datajpa.repository.NoticeRepository;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
-    private final MemberRepository memberRepository;
 
-    @Transactional/*(isolation = Isolation.SERIALIZABLE)*/
+    // @Transactional/*(isolation = Isolation.SERIALIZABLE)*/
     // - 트랜잭션에서 일관성 없는 데이터를 어떻게 허용할지에 대한 허용 수준 옵션
     // - 다른 사용자가 해당 영역에 있는 모든 데이터에 대한 수정과 입력이 불가능하게 만들어 Phantom Read를 방지
     // @Transactional(propagation = Propagation.NEVER)
+    @Transactional
     public void saveNotice(NoticeDTO noticeDTO) {
         // findAll 이기 때문에 모든 행을 다 찾아서 모든 행(전체 엔티티)에 락이 걸린듯
         // 원인 찾음
@@ -42,7 +33,16 @@ public class NoticeService {
         // 데이터를 생성한 채 테스트를 진행하니 인덱스가 걸려서 전체 테이블을 못읽어서 락이 안걸림
         // -> 테이블 전체 락 방법 필요...
 
-        noticeRepository.findAllByIdIn(getNoticeIds(noticeRepository.findAll()));
+        // noticeRepository.findAllByIdIn(getNoticeIds(noticeRepository.findAll()));
+        Notice findNotice = noticeRepository.findByMemberIdAndTeamIdAndTitle(
+            noticeDTO.getMemberId(),
+            noticeDTO.getTeamId(),
+            noticeDTO.getTitle()
+        );
+        if (findNotice != null) throw new IllegalStateException("중복 데이터");
+
+        // 벨리데이션 체크하니까 잘 됨... 코드 개판이고만
+
         noticeRepository.save(NoticeDTO.of(noticeDTO));
     }
 

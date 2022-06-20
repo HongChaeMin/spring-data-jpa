@@ -1,6 +1,9 @@
 package study.datajpa.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.SQLException;
+import java.sql.SQLTransactionRollbackException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,8 +14,11 @@ import org.hibernate.PessimisticLockException;
 import org.hibernate.exception.LockTimeoutException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mariadb.jdbc.internal.util.exceptions.MariaDbSqlException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import study.datajpa.dto.NoticeDTO;
 
 @Slf4j
@@ -26,15 +32,20 @@ class NoticeServiceTest {
     @DisplayName("중복 등록(멀티 쓰레드) 테스트")
     void createMultiThreadTest() throws InterruptedException {
         // 아아아ㅏㅇ아아아ㅏ앙아아아아ㅏ 머리 아파아아ㅏ아아ㅏ아아아아ㅏ아아아ㅏ아아악
-        ExecutorService service = Executors.newFixedThreadPool(30);
-        CountDownLatch count = new CountDownLatch(30);
+        ExecutorService service = Executors.newFixedThreadPool(100);
+        CountDownLatch count = new CountDownLatch(100);
         AtomicInteger result = new AtomicInteger();
 
-        for (int i = 0; i < 30; i++) {
-            int finalI = i;
+        for (int i = 0; i < 100; i++) {
             service.execute(() -> {
                 try {
-                    NoticeDTO noticeDTO = NoticeDTO.builder().noticeId((long) finalI).title("title" + finalI).content("content" + finalI).build();
+                    NoticeDTO noticeDTO = NoticeDTO.builder()
+                        .memberId(1L)
+                        .teamId(1L)
+                        .title("title133")
+                        .content("content")
+                        .build();
+
                     noticeService.saveNotice(noticeDTO);
                     result.getAndIncrement(); // 결과 값 증가
                     log.info("success save");
@@ -42,8 +53,10 @@ class NoticeServiceTest {
                     log.error("락 획득 실패", e);
                 } catch (LockTimeoutException e) {
                     log.error("락 대기 시간 초과", e);
-                } catch (PersistenceException e) {
+                } catch (CannotAcquireLockException e) {
                     log.error("트랜잭션 롤백을 마킹", e);
+                } catch (IllegalStateException e) {
+                    log.error("중복 데이터", e);
                 } catch (Exception e) {
                     log.error("e", e);
                 }

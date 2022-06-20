@@ -24,6 +24,11 @@ public class Notice extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 실 디비와 비슷하게 fk를 걸어보자
+    private Long memberId;
+
+    private Long teamId;
+
     private String title;
 
     private String content;
@@ -31,8 +36,8 @@ public class Notice extends BaseTimeEntity {
     // 엔티티를 수정할 때마다 해당 version 필드가 하나씩 자동으로 증가
     // 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외를 발생
     // 예를 들어 앞서의 A와 B의 수정 상황이라면, B가 수정을 할 때 버전이 다르므로(A가 수정하면서 버전이 하나 증가) 예외가 발생
-    @Version // 최초 커밋만 인정
-    Integer version;
+    // @Version // 최초 커밋만 인정
+    // Integer version;
     // UPDATE BOARD
     // SET
     //     TITLE=?,
