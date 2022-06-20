@@ -2,23 +2,18 @@ package study.datajpa.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.sql.SQLException;
-import java.sql.SQLTransactionRollbackException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.PessimisticLockException;
 import org.hibernate.exception.LockTimeoutException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mariadb.jdbc.internal.util.exceptions.MariaDbSqlException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.CannotAcquireLockException;
-import org.springframework.dao.DeadlockLoserDataAccessException;
 import study.datajpa.dto.NoticeDTO;
 
 @Slf4j
@@ -32,17 +27,17 @@ class NoticeServiceTest {
     @DisplayName("중복 등록(멀티 쓰레드) 테스트")
     void createMultiThreadTest() throws InterruptedException {
         // 아아아ㅏㅇ아아아ㅏ앙아아아아ㅏ 머리 아파아아ㅏ아아ㅏ아아아아ㅏ아아아ㅏ아아악
-        ExecutorService service = Executors.newFixedThreadPool(100);
-        CountDownLatch count = new CountDownLatch(100);
+        ExecutorService service = Executors.newFixedThreadPool(1000);
+        CountDownLatch count = new CountDownLatch(1000);
         AtomicInteger result = new AtomicInteger();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             service.execute(() -> {
                 try {
                     NoticeDTO noticeDTO = NoticeDTO.builder()
                         .memberId(1L)
                         .teamId(1L)
-                        .title("title133")
+                        .title("title")
                         .content("content")
                         .build();
 

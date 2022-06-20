@@ -33,13 +33,8 @@ public class NoticeService {
         // 데이터를 생성한 채 테스트를 진행하니 인덱스가 걸려서 전체 테이블을 못읽어서 락이 안걸림
         // -> 테이블 전체 락 방법 필요...
 
-        // noticeRepository.findAllByIdIn(getNoticeIds(noticeRepository.findAll()));
-        Notice findNotice = noticeRepository.findByMemberIdAndTeamIdAndTitle(
-            noticeDTO.getMemberId(),
-            noticeDTO.getTeamId(),
-            noticeDTO.getTitle()
-        );
-        if (findNotice != null) throw new IllegalStateException("중복 데이터");
+        // MySql 기준으로 row를 전체 select lock을 걸면 테이블 전체에 lock이 걸림
+        noticeRepository.duplicateCheck(noticeDTO); // querydsl lock 성공!
 
         // 벨리데이션 체크하니까 잘 됨... 코드 개판이고만
 
