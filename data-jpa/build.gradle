@@ -38,6 +38,9 @@ dependencies {
 	// apply test lombok
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// test
+	testImplementation "io.mockk:mockk:1.12.4"
 }
 
 test {

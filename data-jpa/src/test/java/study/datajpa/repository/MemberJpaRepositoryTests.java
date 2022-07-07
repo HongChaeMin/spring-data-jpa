@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
 import java.util.List;
+import study.datajpa.repository.member.MemberJpaRepository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

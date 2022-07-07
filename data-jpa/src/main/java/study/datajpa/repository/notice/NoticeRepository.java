@@ -1,4 +1,4 @@
-package study.datajpa.repository;
+package study.datajpa.repository.notice;
 
 import java.util.List;
 import javax.persistence.LockModeType;

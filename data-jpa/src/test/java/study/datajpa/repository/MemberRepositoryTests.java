@@ -8,13 +8,13 @@ import org.springframework.data.domain.*;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDTO;
-import study.datajpa.dto.UserNameOnlyDTO;
 import study.datajpa.entity.Member;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import study.datajpa.repository.member.MemberRepository;
 
 @SpringBootTest
 @Rollback(false)

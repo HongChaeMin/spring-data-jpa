@@ -1,4 +1,4 @@
-package study.datajpa.repository;
+package study.datajpa.repository.member;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package study.datajpa.repository;
+package study.datajpa.repository.member;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -6,7 +6,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDTO;
-import study.datajpa.dto.UserNameOnlyDTO;
 import study.datajpa.entity.Member;
 
 import javax.persistence.LockModeType;

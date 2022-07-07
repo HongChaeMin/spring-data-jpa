@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
-import study.datajpa.repository.MemberRepository;
+import study.datajpa.repository.member.MemberRepository;
 
 @RestController
 @RequiredArgsConstructor

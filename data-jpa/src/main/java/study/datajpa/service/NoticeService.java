@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.NoticeDTO;
 import study.datajpa.entity.Notice;
-import study.datajpa.repository.NoticeRepository;
+import study.datajpa.repository.notice.NoticeRepository;
 
 @Service
 @RequiredArgsConstructor
